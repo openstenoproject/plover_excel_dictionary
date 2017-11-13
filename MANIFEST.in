@@ -1,2 +1,3 @@
 include test/test.ods
 include test/test.xlsx
+include tox.ini
