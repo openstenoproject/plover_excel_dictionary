@@ -4,9 +4,6 @@ from collections import OrderedDict
 import os
 import shutil
 
-# Python 2/3 compatibility.
-from six import iteritems
-
 import pyexcel
 
 from plover.steno_dictionary import StenoDictionary
@@ -48,7 +45,7 @@ class ExcelDictionary(StenoDictionary):
             book[sheet] = []
         book[NEW_SHEET_NAME] = []
         default_extras = (NEW_SHEET_NAME, [])
-        for k, v in iteritems(self._dict):
+        for k, v in self._dict.items():
             sheet, extras = self._extras.get(k, default_extras)
             book[sheet].append(['/'.join(k), v] + extras)
         # pyexcel needs the correct extension to detect the file type...
