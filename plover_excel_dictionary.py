@@ -1,8 +1,6 @@
 # vim: set fileencoding=utf-8 :
 
 from collections import OrderedDict
-import os
-import shutil
 
 import pyexcel
 
@@ -48,8 +46,4 @@ class ExcelDictionary(StenoDictionary):
         for k, v in self._dict.items():
             sheet, extras = self._extras.get(k, default_extras)
             book[sheet].append(['/'.join(k), v] + extras)
-        # pyexcel needs the correct extension to detect the file type...
-        ext = os.path.splitext(self.path)[1]
-        assert ext in filename
-        pyexcel.save_book_as(bookdict=book, dest_file_name=filename + ext)
-        shutil.move(filename + ext, filename)
+        pyexcel.save_book_as(bookdict=book, dest_file_name=filename)
