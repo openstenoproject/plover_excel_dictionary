@@ -23,7 +23,7 @@ def _first_available_package(*package_list):
 
 # Preferred reader/writers for each formats.
 PREFERRED_READER = {
-    '.ods': _first_available_package('pyexcel-ods3'),
+    '.ods': _first_available_package('pyexcel-ods', 'pyexcel-ods3'),
     '.xlsx': _first_available_package('pyexcel-xlsx'),
 }
 PREFERRED_WRITER = {

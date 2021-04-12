@@ -23,6 +23,7 @@ Note:
 
 ### 1.0.0.dev0
 
+* switch to a better maintained `pyexcel` plugin for our default `.ods` support
 * drop support for keeping extraneous data when changing an entry's translation
 
 ### 0.2.4

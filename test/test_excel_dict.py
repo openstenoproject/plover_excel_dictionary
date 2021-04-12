@@ -86,8 +86,8 @@ def test_format(dict_format):#, preferred_reader, preferred_writer):
         assert list(book.items()) == MODIFIED_CONTENTS
 
 @pytest.mark.parametrize('testcase', (
-    'reader ods pyexcel-ods3',
-    'writer ods pyexcel-ods3',
+    'reader ods pyexcel-ods',
+    'writer ods pyexcel-ods',
     'reader xlsx pyexcel-xlsx',
     'writer xlsx pyexcel-xlsx',
 ))
