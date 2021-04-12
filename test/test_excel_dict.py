@@ -22,6 +22,7 @@ TEST_FILES = {
     'xlsx': TEST_DIR / 'test.xlsx',
 }
 TEST_FORMATS = 'ods xlsx'.split()
+# Note: preferred first.
 TEST_READERS = {
     'ods': ('pyexcel-ods', 'pyexcel-ods3'),
     'xlsx': ('pyexcel-xlsx',),
@@ -102,14 +103,13 @@ def test_format(dict_format, preferred_reader, preferred_writer, monkeypatch):
         book = pyexcel.get_book_dict(file_name=savename)
         assert list(book.items()) == MODIFIED_CONTENTS
 
-@pytest.mark.parametrize('testcase', (
-    'reader ods pyexcel-ods',
-    'writer ods pyexcel-ods',
-    'reader xlsx pyexcel-xlsx',
-    'writer xlsx pyexcel-xlsx',
+@pytest.mark.parametrize('plugin_type, dict_format, preferred_plugin', (
+    ('reader', 'ods', TEST_READERS['ods'][0]),
+    ('writer', 'ods', TEST_WRITERS['ods'][0]),
+    ('reader', 'xlsx', TEST_READERS['xlsx'][0]),
+    ('writer', 'xlsx', TEST_WRITERS['xlsx'][0]),
 ))
-def test_preferred_readers_writers_detection(testcase):
-    plugin_type, dict_format, preferred_plugin = testcase.split()
+def test_preferred_readers_writers_detection(plugin_type, dict_format, preferred_plugin):
     attr = 'PREFERRED_' + plugin_type.upper()
     ext = '.' + dict_format
     assert getattr(plover_excel_dictionary, attr)[ext] == preferred_plugin
