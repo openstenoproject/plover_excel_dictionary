@@ -14,13 +14,13 @@ NEW_SHEET_NAME = 'NEW'
 class ExcelDictionary(StenoDictionary):
 
     def __init__(self):
-        super(ExcelDictionary, self).__init__()
+        super().__init__()
         self._dict = OrderedDict()
         self._sheets = []
         self._extras = {}
 
     def __delitem__(self, key):
-        super(ExcelDictionary, self).__delitem__(key)
+        super().__delitem__(key)
         del self._extras[key]
 
     def _load(self, filename):
