@@ -27,7 +27,10 @@ TEST_READERS = {
     'ods': ('pyexcel-ods', 'pyexcel-ods3'),
     'xlsx': ('pyexcel-xlsx',),
 }
-TEST_WRITERS = TEST_READERS
+TEST_WRITERS = {
+    'ods': ('pyexcel-ods', 'pyexcel-ods3'),
+    'xlsx': ('pyexcel-libxlsxw', 'pyexcel-xlsx'),
+}
 
 INITIAL_CONTENTS = [
     (('TEFT', '-D'), 'tested'),

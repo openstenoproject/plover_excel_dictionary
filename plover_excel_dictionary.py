@@ -28,7 +28,7 @@ PREFERRED_READER = {
 }
 PREFERRED_WRITER = {
     '.ods': PREFERRED_READER['.ods'],
-    '.xlsx': PREFERRED_READER['.xlsx'],
+    '.xlsx': _first_available_package('pyexcel-libxlsxw', 'pyexcel-xlsx'),
 }
 
 # Sheet name for modified entries.
