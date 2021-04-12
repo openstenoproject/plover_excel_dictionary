@@ -18,3 +18,10 @@ Note:
  - formulas are expanded on load, and the result of those expansions is saved
    back if the dictionary is modified in Plover, so you should avoid editing
    your dictionary in Plover if you want to keep those formulas.
+
+
+## Release history
+
+### 0.2.4
+
+* drop Python 2 support
