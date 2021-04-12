@@ -22,6 +22,8 @@ Note:
 
 ## Release history
 
+### 1.0.0.dev0
+
 ### 0.2.4
 
 * drop Python 2 support
