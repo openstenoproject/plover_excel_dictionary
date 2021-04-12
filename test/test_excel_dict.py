@@ -1,6 +1,6 @@
-
 from contextlib import contextmanager
 from pathlib import Path
+import itertools
 import os
 import tempfile
 
@@ -22,6 +22,11 @@ TEST_FILES = {
     'xlsx': TEST_DIR / 'test.xlsx',
 }
 TEST_FORMATS = 'ods xlsx'.split()
+TEST_READERS = {
+    'ods': ('pyexcel-ods', 'pyexcel-ods3'),
+    'xlsx': ('pyexcel-xlsx',),
+}
+TEST_WRITERS = TEST_READERS
 
 INITIAL_CONTENTS = [
     (('TEFT', '-D'), 'tested'),
@@ -71,8 +76,20 @@ def setup_module(cls):
     registry.update()
     system.setup(DEFAULT_SYSTEM_NAME)
 
-@pytest.mark.parametrize('dict_format', TEST_FORMATS)
-def test_format(dict_format):#, preferred_reader, preferred_writer):
+
+FORMAT_TESTS = list(itertools.chain(*(
+    itertools.product((dict_format,),
+                      TEST_READERS[dict_format],
+                      TEST_WRITERS[dict_format])
+    for dict_format in TEST_FORMATS
+)))
+
+@pytest.mark.parametrize('dict_format, preferred_reader, preferred_writer', FORMAT_TESTS)
+def test_format(dict_format, preferred_reader, preferred_writer, monkeypatch):
+    monkeypatch.setattr('plover_excel_dictionary.PREFERRED_READER',
+                        {'.' + dict_format: preferred_reader})
+    monkeypatch.setattr('plover_excel_dictionary.PREFERRED_WRITER',
+                        {'.' + dict_format: preferred_writer})
     d_path = TEST_FILES[dict_format]
     d = ExcelDictionary.load(str(d_path))
     assert list(d.items()) == INITIAL_CONTENTS
