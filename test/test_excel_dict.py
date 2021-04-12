@@ -29,7 +29,6 @@ MODIFIED_CONTENTS = [
     ('Sheet1', [
         ['TEFT/-D', 'tested', 'insightful comment'],
         ['S-P', '', ''],
-        ['S*P', 'not space!', 'blah blah'],
         ['R-R', '{^}\n{^}{-|}', '\\n → newline'],
         ['R*R', 'not a tab: `\\t`', ''],
         ['SPAS', ' space ', ''],
@@ -42,6 +41,7 @@ MODIFIED_CONTENTS = [
         ['SHR*UG/SHR*UG', '¯\\\\_(ツ)_/¯'],
     ]),
     ('NEW', [
+        ['S*P', 'not space!'],
         ['TEFT/-G', 'testing'],
     ]),
 ]
