@@ -8,6 +8,7 @@ from plover.steno_dictionary import StenoDictionary
 from plover.steno import normalize_steno
 
 
+# Sheet name for modified entries.
 NEW_SHEET_NAME = 'NEW'
 
 
