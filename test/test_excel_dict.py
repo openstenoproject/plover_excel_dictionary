@@ -2,9 +2,9 @@
 from contextlib import contextmanager
 import os
 import tempfile
-import unittest
 
 import pyexcel
+import pytest
 
 from plover import system
 from plover.config import DEFAULT_SYSTEM_NAME
@@ -57,31 +57,20 @@ def temp_dict(contents, extension):
     finally:
         os.unlink(tf.name)
 
+def setup_module(cls):
+    registry.update()
+    system.setup(DEFAULT_SYSTEM_NAME)
 
-class ExcelDictionaryTestCase(object):
-
-    FORMAT = None
-
-    @classmethod
-    def setUpClass(cls):
-        registry.update()
-        system.setup(DEFAULT_SYSTEM_NAME)
-
-    def test_1(self):
-        d_path = os.path.join(os.path.dirname(__file__), 'test.' + self.FORMAT)
-        d = ExcelDictionary.load(d_path)
-        self.assertEqual(list(d.items()), INITIAL_CONTENTS)
-        d[('S*P',)] = 'not space!'
-        del d[('TEFGT',)]
-        d[('TEFT', '-G')] = 'testing'
-        with temp_dict(b'blah!', self.FORMAT) as savename:
-            d.path = savename
-            d.save()
-            book = pyexcel.get_book_dict(file_name=savename)
-            self.assertEqual(list(book.items()), MODIFIED_CONTENTS)
-
-class OdsDictionaryTestCase(ExcelDictionaryTestCase, unittest.TestCase):
-    FORMAT = 'ods'
-
-class XlsxDictionaryTestCase(ExcelDictionaryTestCase, unittest.TestCase):
-    FORMAT = 'xlsx'
+@pytest.mark.parametrize('dict_format', 'ods xlsx'.split())
+def test_1(dict_format):
+    d_path = os.path.join(os.path.dirname(__file__), 'test.' + dict_format)
+    d = ExcelDictionary.load(d_path)
+    assert list(d.items()) == INITIAL_CONTENTS
+    d[('S*P',)] = 'not space!'
+    del d[('TEFGT',)]
+    d[('TEFT', '-G')] = 'testing'
+    with temp_dict(b'blah!', dict_format) as savename:
+        d.path = savename
+        d.save()
+        book = pyexcel.get_book_dict(file_name=savename)
+        assert list(book.items()) == MODIFIED_CONTENTS
