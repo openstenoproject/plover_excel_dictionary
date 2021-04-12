@@ -1,6 +1,6 @@
 # vim: set fileencoding=utf-8 :
 
-from collections import defaultdict, OrderedDict
+from collections import OrderedDict
 import os
 import shutil
 
