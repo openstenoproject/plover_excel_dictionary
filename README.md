@@ -21,8 +21,9 @@ Note:
 
 ## Release history
 
-### 1.0.0.dev0
+### 1.0.0
 
+* ensure the best available plugin is used for each format save/load operation
 * switch to a better maintained `pyexcel` plugin for our default `.ods` support
 * drop support for keeping extraneous data when changing an entry's translation
 
