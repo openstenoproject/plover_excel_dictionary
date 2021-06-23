@@ -1,16 +1,11 @@
-from contextlib import contextmanager
 from pathlib import Path
 import itertools
-import os
-import tempfile
 
 from pyexcel_io.exceptions import SupportingPluginAvailableButNotInstalled
 import pyexcel
 import pytest
 
-from plover import system
-from plover.config import DEFAULT_SYSTEM_NAME
-from plover.registry import registry
+from plover_build_utils.testing import dictionary_test, make_dict
 
 from plover_excel_dictionary import ExcelDictionary
 import plover_excel_dictionary
@@ -66,21 +61,6 @@ MODIFIED_CONTENTS = [
 ]
 
 
-@contextmanager
-def temp_dict(contents, extension):
-    tf = tempfile.NamedTemporaryFile(delete=False, suffix='.'+extension)
-    try:
-        tf.write(contents)
-        tf.close()
-        yield tf.name
-    finally:
-        os.unlink(tf.name)
-
-def setup_module(cls):
-    registry.update()
-    system.setup(DEFAULT_SYSTEM_NAME)
-
-
 FORMAT_TESTS = list(itertools.chain(*(
     itertools.product((dict_format,),
                       TEST_READERS[dict_format],
@@ -89,7 +69,7 @@ FORMAT_TESTS = list(itertools.chain(*(
 )))
 
 @pytest.mark.parametrize('dict_format, preferred_reader, preferred_writer', FORMAT_TESTS)
-def test_format(dict_format, preferred_reader, preferred_writer, monkeypatch):
+def test_format(tmp_path, dict_format, preferred_reader, preferred_writer, monkeypatch):
     monkeypatch.setattr('plover_excel_dictionary.PREFERRED_READER',
                         {'.' + dict_format: preferred_reader})
     monkeypatch.setattr('plover_excel_dictionary.PREFERRED_WRITER',
@@ -100,10 +80,10 @@ def test_format(dict_format, preferred_reader, preferred_writer, monkeypatch):
     d[('S*P',)] = 'not space!'
     del d[('TEFGT',)]
     d[('TEFT', '-G')] = 'testing'
-    with temp_dict(b'blah!', dict_format) as savename:
-        d.path = savename
+    with make_dict(tmp_path, b'blah!', extension=dict_format) as savename:
+        d.path = str(savename)
         d.save()
-        book = pyexcel.get_book_dict(file_name=savename)
+        book = pyexcel.get_book_dict(file_name=str(savename))
         assert list(book.items()) == MODIFIED_CONTENTS
 
 @pytest.mark.parametrize('plugin_type, dict_format, preferred_plugin', (
@@ -125,11 +105,11 @@ def test_preferred_reader_is_used(dict_format, monkeypatch):
         ExcelDictionary.load(str(TEST_FILES[dict_format]))
 
 @pytest.mark.parametrize('dict_format', TEST_FORMATS)
-def test_preferred_writer_is_used(dict_format, monkeypatch):
+def test_preferred_writer_is_used(tmp_path, dict_format, monkeypatch):
     monkeypatch.setattr('plover_excel_dictionary.PREFERRED_WRITER',
                         {'.' + dict_format: 'pouet'})
     d = ExcelDictionary.load(str(TEST_FILES[dict_format]))
-    with temp_dict(b'', dict_format) as savename:
-        d.path = savename
+    with make_dict(tmp_path, b'', extension=dict_format) as savename:
+        d.path = str(savename)
         with pytest.raises(SupportingPluginAvailableButNotInstalled):
             d.save()
