@@ -21,7 +21,7 @@ Note:
 
 ## Release history
 
-### [unreleased]
+### 1.0.1
 
 * fix `__delitem__` implementation
 
