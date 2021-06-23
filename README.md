@@ -21,6 +21,10 @@ Note:
 
 ## Release history
 
+### [unreleased]
+
+* fix `__delitem__` implementation
+
 ### 1.0.0
 
 * ensure the best available plugin is used for each format save/load operation

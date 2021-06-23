@@ -45,7 +45,7 @@ class ExcelDictionary(StenoDictionary):
 
     def __delitem__(self, key):
         super().__delitem__(key)
-        del self._extras[key]
+        self._extras.pop(key, None)
 
     def _load(self, filename):
         ext = os.path.splitext(filename)[1]
