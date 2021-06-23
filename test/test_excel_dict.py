@@ -113,3 +113,40 @@ def test_preferred_writer_is_used(tmp_path, dict_format, monkeypatch):
         d.path = str(savename)
         with pytest.raises(SupportingPluginAvailableButNotInstalled):
             d.save()
+
+
+class _TestDictionary:
+
+    DICT_CLASS = ExcelDictionary
+    DICT_REGISTERED = True
+    DICT_SAMPLE = 'test'
+    DICT_LOAD_TESTS = [
+        lambda: (
+            'test',
+            '\n'.join(
+                '%r: %r,' % ('/'.join(k), v)
+                for k, v in INITIAL_CONTENTS
+            )
+        ),
+    ]
+    DICT_SAVE_TESTS = [
+        lambda: (t()[1], None)
+        for t in DICT_LOAD_TESTS
+    ]
+
+    @classmethod
+    def make_dict(cls, contents):
+        if isinstance(contents, bytes):
+            return contents
+        path = Path(__file__).parent / (contents + '.' + cls.DICT_EXTENSION)
+        return path.read_bytes()
+
+@dictionary_test
+class TestOdsDictionary(_TestDictionary):
+
+    DICT_EXTENSION = 'ods'
+
+@dictionary_test
+class TestXlsxDictionary(_TestDictionary):
+
+    DICT_EXTENSION = 'xlsx'
